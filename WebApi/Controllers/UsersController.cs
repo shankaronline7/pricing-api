@@ -47,6 +47,11 @@ namespace WebApi.Controllers
         {
             return Ok(await Mediator.Send(new GetUsersQuery()));
         }
+        [HttpGet]
+        public async Task<IActionResult> Getall()
+        {
+            return Ok(await Mediator.Send(new GetUsersQuery()));
+        }
     }
 
 }
