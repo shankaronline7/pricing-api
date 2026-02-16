@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Pricing.WebApi.Controllers;
-
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public abstract class ApiControllerBase : ControllerBase
