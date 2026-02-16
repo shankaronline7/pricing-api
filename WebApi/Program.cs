@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -11,9 +11,14 @@ using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
+Console.WriteLine("Issuer Loaded: " + builder.Configuration["Jwt:Issuer"]);
+Console.WriteLine("Audience Loaded: " + builder.Configuration["Jwt:Audience"]);
+Console.WriteLine("Key Loaded: " + builder.Configuration["Jwt:Key"]);
+
+
 #region Services Registration
 
-// 1?? Controllers + JSON Enum as String
+// 1️⃣ Controllers + JSON Enum as String
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
@@ -21,7 +26,7 @@ builder.Services.AddControllers()
             .Add(new JsonStringEnumConverter());
     });
 
-// 2?? Swagger
+// 2️⃣ Swagger
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddSwaggerGen(options =>
@@ -53,19 +58,17 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 
-// 3?? Application Layer (MediatR, Validators, etc.)
+// 3️⃣ Application Layer (MediatR, Validators, etc.)
 builder.Services.AddApplicationServices();
 
-// 4?? Infrastructure Layer (DbContext, Repositories)
+// 4️⃣ Infrastructure Layer (DbContext, Repositories)
 builder.Services.AddInfrastructureServices(builder.Configuration);
 
-// 5?? JWT Authentication
+// 5️⃣ JWT Authentication
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
         var jwtSettings = builder.Configuration.GetSection("Jwt");
-        options.TokenValidationParameters.ClockSkew = TimeSpan.Zero;
-
 
         options.TokenValidationParameters = new TokenValidationParameters
         {
@@ -73,21 +76,25 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateAudience = true,
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
+            ClockSkew = TimeSpan.Zero,
 
             ValidIssuer = jwtSettings["Issuer"],
             ValidAudience = jwtSettings["Audience"],
             IssuerSigningKey = new SymmetricSecurityKey(
                 Encoding.UTF8.GetBytes(jwtSettings["Key"]))
         };
+
         options.Events = new JwtBearerEvents
         {
             OnAuthenticationFailed = context =>
             {
-                Console.WriteLine("? AUTH FAILED: " + context.Exception.Message);
+                Console.WriteLine("❌ AUTH FAILED: " + context.Exception.ToString());
                 return Task.CompletedTask;
             }
         };
     });
+
+
 
 builder.Services.AddAuthorization();
 
@@ -97,21 +104,21 @@ var app = builder.Build();
 
 #region Middleware Pipeline
 
-// 6?? Swagger Middleware
+// 6️⃣ Swagger Middleware
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-// 7?? HTTPS Redirection
+// 7️⃣ HTTPS Redirection
 app.UseHttpsRedirection();
 
-// ?? IMPORTANT: Authentication must come BEFORE Authorization
+// 🔐 IMPORTANT: Authentication must come BEFORE Authorization
 app.UseAuthentication();
 app.UseAuthorization();
 
-// 8?? Map Controllers
+// 8️⃣ Map Controllers
 app.MapControllers();
 
 #endregion

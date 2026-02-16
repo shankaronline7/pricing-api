@@ -45,6 +45,9 @@ namespace Application.Users.Commands.Login
 
             var token = _jwtService.GenerateToken((int)user.Id, user.Username);
 
+            _jwtService.ValidateTokenManually(token.Token);
+
+
             return new LoginResponseDto
             {
                 Token = token.Token,
