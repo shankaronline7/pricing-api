@@ -62,7 +62,7 @@ namespace WebApi.Controllers
 
             return Ok(result);
         }
-        [Authorize]
+        
         [HttpGet("get-users")]
         public async Task<IActionResult> GetUsers()
         {

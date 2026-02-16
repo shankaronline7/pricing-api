@@ -60,7 +60,41 @@ namespace Infrastructure.Services
         {
             return GenerateToken((int)userId, username);
         }
+        // ✅ ADD THIS METHOD INSIDE CLASS
+        public void ValidateTokenManually(string token)
+        {
+            var jwtSettings = _configuration.GetSection("Jwt");
 
+            var tokenHandler = new JwtSecurityTokenHandler();
+
+            var validationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true,
+                ClockSkew = TimeSpan.Zero,
+
+                ValidIssuer = jwtSettings["Issuer"],
+                ValidAudience = jwtSettings["Audience"],
+                IssuerSigningKey = new SymmetricSecurityKey(
+                    Encoding.UTF8.GetBytes(jwtSettings["Key"]))
+            };
+
+            try
+            {
+                tokenHandler.ValidateToken(
+                    token,
+                    validationParameters,
+                    out SecurityToken validatedToken);
+
+                Console.WriteLine("✅ TOKEN VALID");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("❌ TOKEN INVALID: " + ex.Message);
+            }
+        }
     }
 
 }

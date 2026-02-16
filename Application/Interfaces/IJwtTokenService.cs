@@ -9,6 +9,7 @@ namespace Application.Interfaces
     public interface IJwtTokenService
     {
         (string Token, DateTime Expiry) GenerateToken(long userId, string username);
+        void ValidateTokenManually(string token);
     }
 
 }
