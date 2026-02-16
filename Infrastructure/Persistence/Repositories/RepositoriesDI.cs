@@ -1,7 +1,9 @@
 ﻿using Application.Common.Interfaces.Data;
+using Application.Interfaces;
 using DSP.Pricing.Application.Common.Interfaces.Data;
 using DSP.Pricing.Infrastructure.Persistence.Repositories;
 using Infrastructure.Persistence.Repositories;
+using Infrastructure.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Pricing.Application.Common.Interfaces;
 using Pricing.Application.Common.Interfaces.Data;
@@ -22,6 +24,8 @@ namespace Pricing.Infrastructure.Persistence
             services.AddTransient<IUserRepository, UserRepository>();
 
             services.AddTransient<IUnitOfWork, UnitOfWork>();
+            services.AddTransient<IJwtTokenService, JwtTokenService>();
+
 
 
         }
