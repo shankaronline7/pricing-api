@@ -9,6 +9,7 @@ using Pricing.WebApi.Controllers;
 
 namespace WebApi.Controllers
 {
+    
     public class BasePriceLeasingController : ApiControllerBase
     {
         /// <summary>
