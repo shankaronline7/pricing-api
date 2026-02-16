@@ -1,8 +1,10 @@
 ﻿using Application.Common.Interfaces.Data;
+using Application.Interfaces;
 using Dapper;
 using DSP.Pricing.Application.Common.Interfaces.Data;
 using DSP.Pricing.Infrastructure.Persistence.Repositories;
 using Infrastructure.Persistence.Repositories;
+using Infrastructure.Services;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -27,13 +29,19 @@ namespace Pricing.Infrastructure.Persistence
         private IModelBaseDataRepository _modelBaseDataRepository;
         private IProductionCostRepository _productionCostRepository;
         private IUserRepository? _userRepository;
+        private readonly IJwtTokenService _jwtTokenService;
+
 
 
         private ISaveLeasingPriceRepository _saveLeasingPriceRepository;
-        public UnitOfWork(ApplicationDbContext context, IConfiguration configuration)
+        public UnitOfWork(
+            ApplicationDbContext context,
+            IConfiguration configuration,
+            IJwtTokenService jwtTokenService)
         {
             _context = context;
             _configuration = configuration;
+            _jwtTokenService = jwtTokenService;
         }
         public IUserRepository UserRepository => _userRepository ??(_userRepository = new UserRepository(_context));
 
@@ -46,7 +54,14 @@ namespace Pricing.Infrastructure.Persistence
         public ILeasingCalculationRepository LeasingCalculation => _leasingCalculationRepository?? (_leasingCalculationRepository = new LeasingCalculationRepository(_context));
         public ISaveLeasingPriceRepository saveLeasingPriceRepository => _saveLeasingPriceRepository ?? (_saveLeasingPriceRepository = new SaveLeasingPriceRepository(_context));
 
-        public IProductionCostRepository productionCostRepository => throw new NotImplementedException();
+
+        public IUserRepository User
+            => _userRepository ??= new UserRepository(_context);
+       
+
+        public IJwtTokenService JwtTokenService
+            => _jwtTokenService;
+
 
         public async Task<IList<T>> ExecWithStoreProcedureAsyncWithParam<T>(string query, params object[] parameters)
         {

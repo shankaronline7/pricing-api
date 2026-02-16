@@ -11,6 +11,7 @@ namespace Application.Users.Commands.CreateUser
         public string EmailId { get; set; }
         public string Password { get; set; }
         public int Status { get; set; }
+        public string CreatedBy { get; set; }
     }
 
 

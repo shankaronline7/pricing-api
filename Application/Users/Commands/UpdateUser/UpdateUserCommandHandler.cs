@@ -35,9 +35,10 @@ using Pricing.Application.Common.Interfaces;
             user.Firstname = request.Dto.Firstname ?? user.Firstname;
             user.Lastname = request.Dto.Lastname ?? user.Lastname;
             user.EmailId = request.Dto.EmailId ?? user.EmailId;
+            user.CreatedBy = request.Dto.CreatedBy ?? user.CreatedBy;
 
-            // If Status is nullable in DTO
-            if (request.Dto.Status.HasValue)
+        // If Status is nullable in DTO
+        if (request.Dto.Status.HasValue)
                 user.Status = (Domain.Constants.UserStatus)request.Dto.Status.Value;
 
             // Update password only if provided

@@ -1,11 +1,14 @@
 ﻿using Pricing.Domain.Constants;
+using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain.Entities.UserManagement
 {
+    [Table("users")] // optional but recommended for EF Core
     public class users
     {
         public static string PasswordHash { get; set; }
+
         [Column("id")]
         public long Id { get; set; }
 
@@ -29,5 +32,8 @@ namespace Domain.Entities.UserManagement
 
         [Column("created_date")]
         public DateTime CreatedDate { get; set; }
+
+        [Column("created_by")]
+        public string? CreatedBy { get; set; }
     }
 }
