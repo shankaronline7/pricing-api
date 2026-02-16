@@ -29,7 +29,9 @@ public class GetUsersQueryHandler
                 EmailId = x.EmailId,
                 Password = x.Password,
                 Status = x.Status,
-                CreatedDate = x.CreatedDate
+                CreatedDate = x.CreatedDate,
+                CreatedBy = x.CreatedBy
+
             })
             .ToList();
     }

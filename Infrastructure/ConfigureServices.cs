@@ -7,6 +7,7 @@ using Pricing.Domain.Constants;
 using Pricing.Infrastructure.Persistence;
 using System.Reflection;
 
+
 namespace Pricing.Infrastructure;
 
 public static class ConfigureServices
@@ -31,7 +32,7 @@ public static class ConfigureServices
             var dataSourceBuilder = new NpgsqlDataSourceBuilder(connectionString);
 
             // 🔥 MAP POSTGRES ENUM
-            dataSourceBuilder.MapEnum<UserStatus>("public.user_status");
+           // dataSourceBuilder.MapEnum<UserStatus>("user_status");
 
             var dataSource = dataSourceBuilder.Build();
 
@@ -40,6 +41,7 @@ public static class ConfigureServices
                 {
                     npgsqlOptions.CommandTimeout(180);
                     npgsqlOptions.EnableRetryOnFailure(0);
+                    dataSourceBuilder.MapEnum<UserStatus>("user_status");
                 }));
         }
 

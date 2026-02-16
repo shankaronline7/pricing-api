@@ -8,6 +8,7 @@
         public string? EmailId { get; set; }
         public string? Password { get; set; }
         public int? Status { get; set; }   // Nullable
+        public string? CreatedBy { get; set; }
     }
 
 }
