@@ -1,5 +1,6 @@
 ﻿using Application.Common.Interfaces.Data;
 using Domain.Entities.UserManagement;
+using Microsoft.AspNet.Identity;
 using Microsoft.EntityFrameworkCore;
 using Pricing.Infrastructure.Persistence;
 using Pricing.Infrastructure.Persistence.Repositories;
@@ -33,6 +34,13 @@ namespace Infrastructure.Persistence.Repositories
             return await _context.Set<users>()
                 .FirstOrDefaultAsync(x => x.Id == userId);
         }
+
+        public async Task<users> GetByUsernameAsync(string username)
+        {
+            return await _context.users
+                .FirstOrDefaultAsync(x => x.Username == username);
+        }
+
 
         public async Task<bool> UsernameExistsAsync(string username)
         {

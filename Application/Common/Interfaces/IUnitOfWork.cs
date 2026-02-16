@@ -1,4 +1,5 @@
 ﻿using Application.Common.Interfaces.Data;
+using Application.Interfaces;
 using DSP.Pricing.Application.Common.Interfaces.Data;
 using Pricing.Application.Common.Interfaces.Data;
 
@@ -13,7 +14,9 @@ namespace Pricing.Application.Common.Interfaces
         IMileageRepository Mileage { get; }
         IModelBaseDataRepository ModelBaseData { get; }
         IProductionCostRepository ProductionCost { get; }
+        IUserRepository User { get; }
 
+        IJwtTokenService JwtTokenService { get; }
         IBasePriceLeasingRepository BasePriceLeasing { get; }
         IBaseEditPriceLeasingRepository BaseEditPriceLeasing { get; }
         IUserRepository UserRepository { get; }

@@ -2,6 +2,7 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Npgsql;
 using Pricing.Domain.Constants;
 using Pricing.Domain.Entities;
 using System.Diagnostics;
@@ -56,9 +57,9 @@ public class ApplicationDbContext : DbContext, IDisposable
     // public DbSet<AuditableEntitySaveChangesInterceptor> AuditableEntitySaveChangesInterceptors { get;set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.HasPostgresEnum<UserStatus>("public", "user_status");
+        modelBuilder.HasPostgresEnum<UserStatus>("user_status");
 
-    
+
         modelBuilder.Entity<LeasingCalculationResults>(entity =>
         {
             entity.ToTable("BP#LeasingCalculationResults.LCR");
@@ -336,8 +337,7 @@ public class ApplicationDbContext : DbContext, IDisposable
                 }
             }
         }
-
-        modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
 
         base.OnModelCreating(modelBuilder);
     }
