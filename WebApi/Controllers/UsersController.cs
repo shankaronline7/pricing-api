@@ -49,6 +49,7 @@ namespace WebApi.Controllers
         {
             return Ok(await Mediator.Send(new GetUsersQuery()));
         }
+        [AllowAnonymous]
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginRequestDto request)
         {
