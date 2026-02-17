@@ -27,7 +27,7 @@ public class GetUsersQueryHandler
                 Firstname = x.Firstname,
                 Lastname = x.Lastname,
                 EmailId = x.EmailId,
-                Password = x.Password,
+                Password = x.PasswordHash,
                 Status = x.Status,
                 CreatedDate = x.CreatedDate,
                 CreatedBy = x.CreatedBy

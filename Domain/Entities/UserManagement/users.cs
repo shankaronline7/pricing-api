@@ -7,7 +7,7 @@ namespace Domain.Entities.UserManagement
     [Table("users")] // optional but recommended for EF Core
     public class users
     {
-        public static string PasswordHash { get; set; }
+        //public static string PasswordHash { get; set; }
 
         [Column("id")]
         public long Id { get; set; }
@@ -22,7 +22,7 @@ namespace Domain.Entities.UserManagement
         public string Lastname { get; set; }
 
         [Column("password_hash")]
-        public string Password { get; set; }
+        public string PasswordHash { get; set; }
 
         [Column("email_id")]
         public string EmailId { get; set; }
