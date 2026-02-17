@@ -18,13 +18,18 @@ namespace Application.Users.Commands.Login
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IJwtTokenService _jwtService;
+        private readonly IPasswordService _passwordService;
+
 
         public LoginCommandHandler(
             IUnitOfWork unitOfWork,
-            IJwtTokenService jwtService)
+            IJwtTokenService jwtService,
+            IPasswordService passwordService)
         {
             _unitOfWork = unitOfWork;
             _jwtService = jwtService;
+            _passwordService = passwordService;
+
         }
 
         public async Task<LoginResponseDto> Handle(
@@ -37,8 +42,11 @@ namespace Application.Users.Commands.Login
             if (user == null)
                 throw new UnauthorizedAccessException("Invalid username");
 
-            if (user.Password != request.Password)
-                throw new UnauthorizedAccessException("Invalid password");
+            var isValid = _passwordService.VerifyPassword( user.PasswordHash,request.Password);
+
+            if (!isValid)
+                throw new UnauthorizedAccessException("Invalid credentials");
+
 
             if (user.Status != UserStatus.Active)
                 throw new UnauthorizedAccessException("User inactive");

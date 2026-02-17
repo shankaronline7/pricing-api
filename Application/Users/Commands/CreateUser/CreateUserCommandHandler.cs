@@ -1,4 +1,5 @@
 ﻿using Application.Common.Interfaces.Data;
+using Application.Interfaces;
 using Domain.Entities.UserManagement;
 using FluentValidation;
 using FluentValidation.Results;
@@ -17,14 +18,16 @@ namespace Application.Users.Commands.CreateUser
     {
         private readonly IUserRepository _userRepo;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly PasswordHasher<users> _hasher = new();
+        private readonly IPasswordService _passwordService;
 
         public CreateUserCommandHandler(
             IUserRepository userRepo,
-            IUnitOfWork unitOfWork)
+            IUnitOfWork unitOfWork,
+            IPasswordService passwordService)
         {
             _userRepo = userRepo;
             _unitOfWork = unitOfWork;
+            _passwordService = passwordService;
         }
 
         // --- Combined FluentValidation class inside the handler ---
@@ -53,8 +56,8 @@ namespace Application.Users.Commands.CreateUser
                     .NotEmpty().WithMessage("Password is required")
                     .MinimumLength(6).WithMessage("Password must be at least 6 characters");
 
-                RuleFor(x => x.Status)
-                    .IsInEnum().WithMessage("Status is required");
+                /*RuleFor(x => x.Status)
+                    .IsInEnum().WithMessage("Status is required");*/
 
                 RuleFor(x => x.CreatedBy)
                     .NotEmpty().WithMessage("CreatedBy is required")
@@ -91,8 +94,8 @@ namespace Application.Users.Commands.CreateUser
                 CreatedBy = request.CreatedBy
             };
 
-            // 4️⃣ Hash password
-            user.Password = _hasher.HashPassword(user, request.Password);
+            // 4️⃣ Hash password (CORRECT WAY)
+            user.PasswordHash = _passwordService.HashPassword(request.Password);
 
             // 5️⃣ Save to database
             await _userRepo.AddAsync(user);
@@ -100,5 +103,7 @@ namespace Application.Users.Commands.CreateUser
 
             return user.Id;
         }
+
     }
 }
+
