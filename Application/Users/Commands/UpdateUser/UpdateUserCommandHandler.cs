@@ -44,7 +44,7 @@ using Pricing.Application.Common.Interfaces;
             // Update password only if provided
             if (!string.IsNullOrEmpty(request.Dto.Password))
             {
-                user.Password = _hasher.HashPassword(user, request.Dto.Password);
+                user.PasswordHash = _hasher.HashPassword(user, request.Dto.Password);
             }
 
             await _uow.SaveChangesAsync(cancellationToken);
