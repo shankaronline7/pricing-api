@@ -5,6 +5,8 @@ namespace Application.Users.Commands.CreateUser
 {
     public class CreateUserCommand : IRequest<long>
     {
+        public int RoleId { get; set; }
+
         public string Username { get; set; }
         public string Firstname { get; set; }
         public string Lastname { get; set; }

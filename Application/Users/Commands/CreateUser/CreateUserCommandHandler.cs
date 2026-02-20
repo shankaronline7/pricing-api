@@ -19,15 +19,19 @@ namespace Application.Users.Commands.CreateUser
         private readonly IUserRepository _userRepo;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IPasswordService _passwordService;
+        private readonly IRoleRepository _roleRepo;
+
 
         public CreateUserCommandHandler(
-            IUserRepository userRepo,
-            IUnitOfWork unitOfWork,
-            IPasswordService passwordService)
+        IUserRepository userRepo,
+        IUnitOfWork unitOfWork,
+        IPasswordService passwordService,
+        IRoleRepository roleRepo)
         {
             _userRepo = userRepo;
             _unitOfWork = unitOfWork;
             _passwordService = passwordService;
+            _roleRepo = roleRepo;
         }
 
         // --- Combined FluentValidation class inside the handler ---
@@ -79,10 +83,19 @@ namespace Application.Users.Commands.CreateUser
             }
 
             // 2️⃣ Check if username already exists
+            // 2️⃣ Check if username already exists
             if (await _userRepo.UsernameExistsAsync(request.Username))
                 throw new Exception("Username already exists");
 
-            // 3️⃣ Create user object
+            // 3️⃣ Validate role first
+            var role = await _roleRepo.GetByIdAsync(request.RoleId);
+
+            if (role == null)
+            {
+                throw new Exception("Invalid Role");
+            }
+
+            // 4️⃣ Create user object
             var user = new users
             {
                 Username = request.Username,
@@ -91,19 +104,20 @@ namespace Application.Users.Commands.CreateUser
                 EmailId = request.EmailId,
                 Status = (UserStatus)request.Status,
                 CreatedDate = DateTime.UtcNow,
-                CreatedBy = request.CreatedBy
+                CreatedBy = request.CreatedBy,
+                RoleId = request.RoleId   
             };
 
-            // 4️⃣ Hash password (CORRECT WAY)
+            // 5️⃣ Hash password
             user.PasswordHash = _passwordService.HashPassword(request.Password);
 
-            // 5️⃣ Save to database
+            // 6️⃣ Save to database
             await _userRepo.AddAsync(user);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
             return user.Id;
-        }
 
+
+        }
     }
 }
-

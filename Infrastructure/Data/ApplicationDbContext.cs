@@ -24,7 +24,7 @@ public class ApplicationDbContext : DbContext, IDisposable
      
     }
 
-
+    public DbSet<Role> Roles { get; set; }
     public DbSet<users> users { get; set; }
     public DbSet<Brand> Brands { get; set; }
     public DbSet<LeasingCalculationResults> LeasingCalculationResults { get; set; }
@@ -58,6 +58,43 @@ public class ApplicationDbContext : DbContext, IDisposable
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.HasPostgresEnum<UserStatus>("user_status");
+
+        // ROLE TABLE
+        modelBuilder.Entity<Role>(entity =>
+        {
+            entity.ToTable("roles");
+
+            entity.HasKey(r => r.RoleId);
+
+            entity.Property(r => r.RoleId)
+                  .HasColumnName("role_id");
+
+            entity.Property(r => r.RoleName)
+                  .HasColumnName("role_name")
+                  .IsRequired();
+        });
+
+
+        // USERS TABLE
+        modelBuilder.Entity<users>(entity =>
+        {
+            entity.ToTable("users");
+
+            entity.HasKey(u => u.Id);
+
+            entity.Property(u => u.Id)
+                  .HasColumnName("id");
+
+            entity.Property(u => u.RoleId)
+                  .HasColumnName("role_id");   // 🔥 VERY IMPORTANT
+
+            entity.HasOne(u => u.Role)
+                  .WithMany()
+                  .HasForeignKey(u => u.RoleId);
+        });
+
+
+
 
 
         modelBuilder.Entity<LeasingCalculationResults>(entity =>
