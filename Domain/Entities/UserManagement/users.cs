@@ -35,5 +35,8 @@ namespace Domain.Entities.UserManagement
 
         [Column("created_by")]
         public string? CreatedBy { get; set; }
+        public int RoleId { get; set; }
+        public Role Role { get; set; }
+
     }
 }

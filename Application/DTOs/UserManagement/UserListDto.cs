@@ -8,12 +8,13 @@ namespace Application.DTOs.UserManagement
         public string Username { get; set; } = null!;
         public string Firstname { get; set; } = null!;
         public string Lastname { get; set; } = null!;
-        public string Password { get; set; } = null!;
 
         public string EmailId { get; set; } = null!;
         public UserStatus Status { get; set; }
 
         public DateTime CreatedDate { get; set; }
         public string CreatedBy { get; set; } = null!;
+        public int RoleId { get; set; }
+        public string RoleName { get; set; }
     }
 }

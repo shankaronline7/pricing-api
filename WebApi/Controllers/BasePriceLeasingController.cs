@@ -3,6 +3,7 @@ using Application.DTOs;
 using DSP.Pricing.Application.BasePriceLeasing.Command.SavePriceLeasing;
 using DSP.Pricing.Application.BasePriceLeasing.Queries.EditLeasing;
 using DSP.Pricing.Application.BasePriceLeasing.Queries.LeasingCalculation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Pricing.Application.BasePriceLeasing.Queries.BasePriceLeasing;
 using Pricing.WebApi.Controllers;
@@ -20,6 +21,8 @@ namespace WebApi.Controllers
         /// </remarks>
         /// <returns> This endpoint returns a list of Active Base Price Leasing Detail</returns>
         /// <response code="200">This endpoint returns List of Base Price Leasing Records</response>
+        [Authorize(Roles = "Administrator,Sales Manager,Editor,Viewer")]
+
         [HttpGet]
         public async Task<ActionResult<List<BasePriceLeasingDto>>> GetBasePriceLeaseing()
         {
@@ -28,6 +31,8 @@ namespace WebApi.Controllers
                 NotFound() :
                 Ok(result);
         }
+        [Authorize(Roles = "Administrator,Sales Manager,Editor")]
+
         [HttpPost("SavePriceLeasing")]
         public async Task<ActionResult<int>> SaveLeasingPrice(List<SaveLeasingPriceDto> saveLeasingPriceDto)
         {
@@ -38,6 +43,8 @@ namespace WebApi.Controllers
                  Ok();
         }
         /// <response code="200">This endpoint returns a list of Active/In work/In Approval/Approved/New  Base Price Leasing Detail.</response>
+        [Authorize(Roles = "Administrator,Sales Manager,Editor")]
+
         [HttpPost("EditPriceLeasing")]
         public async Task<ActionResult<List<EditBasePriceLeasingDto>>> GetEditPriceLeaseing([FromBody] long[] ModelBaseDataID)
         {

@@ -15,6 +15,8 @@ namespace WebApi.Controllers
     [ApiController]
     public class UsersController : ApiControllerBase
     {
+        [Authorize(Roles = "Administrator")]
+
         [HttpPost("Create")]
         public async Task<IActionResult> Create(CreateUserCommand command)
         {
@@ -30,6 +32,8 @@ namespace WebApi.Controllers
 
             return result ? Ok() : NotFound();
         }
+        [Authorize(Roles = "Administrator")]
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> Deactivate(long id)
         {
@@ -43,7 +47,8 @@ namespace WebApi.Controllers
 
             return Ok("User deactivated successfully");
         }
-        [Authorize]
+        [Authorize(Roles = "Administrator,Sales Manager")]
+
         [HttpGet]
         public async Task<IActionResult> Get()
         {
@@ -64,14 +69,7 @@ namespace WebApi.Controllers
             return Ok(result);
         }
         
-        [HttpGet("get-users")]
-        public async Task<IActionResult> GetUsers()
-        {
-            var result = await Mediator.Send(new GetUsersQuery());
-            return Ok(result);
-        }
-
-
+     
     }
 
 }

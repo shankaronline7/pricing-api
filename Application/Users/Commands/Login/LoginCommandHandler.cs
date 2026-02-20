@@ -33,8 +33,8 @@ namespace Application.Users.Commands.Login
         }
 
         public async Task<LoginResponseDto> Handle(
-            LoginCommand request,
-            CancellationToken cancellationToken)
+     LoginCommand request,
+     CancellationToken cancellationToken)
         {
             var user = await _unitOfWork.User
                 .GetByUsernameAsync(request.Username);
@@ -42,19 +42,23 @@ namespace Application.Users.Commands.Login
             if (user == null)
                 throw new UnauthorizedAccessException("Invalid username");
 
-            var isValid = _passwordService.VerifyPassword( user.PasswordHash,request.Password);
+            var isValid = _passwordService.VerifyPassword(
+                user.PasswordHash,
+                request.Password);
 
             if (!isValid)
                 throw new UnauthorizedAccessException("Invalid credentials");
 
-
             if (user.Status != UserStatus.Active)
                 throw new UnauthorizedAccessException("User inactive");
 
-            var token = _jwtService.GenerateToken((int)user.Id, user.Username);
-
-            _jwtService.ValidateTokenManually(token.Token);
-
+            // ✅ ROLE-BASED TOKEN GENERATION
+            var token = _jwtService.GenerateToken(
+                (int)user.Id,
+                user.Username,
+                user.RoleId,
+                user.Role.RoleName
+            );
 
             return new LoginResponseDto
             {
@@ -62,7 +66,9 @@ namespace Application.Users.Commands.Login
                 Expiry = token.Expiry
             };
         }
+
     }
-
-
 }
+
+
+
