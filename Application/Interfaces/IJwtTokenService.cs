@@ -8,8 +8,9 @@ namespace Application.Interfaces
 {
     public interface IJwtTokenService
     {
-        (string Token, DateTime Expiry) GenerateToken(long userId, string username);
-        void ValidateTokenManually(string token);
+        (string Token, DateTime Expiry)
+        GenerateToken(int userId, string username, int roleId, string roleName);
+
     }
 
 }

@@ -19,7 +19,7 @@ public class GetUsersQueryHandler
         var users = await _unitOfWork.UserRepository.GetAllAsync();
 
         return users
-            .OrderBy(x => x.Id) 
+            .OrderBy(x => x.Id)
             .Select(x => new UserListDto
             {
                 Id = x.Id,
@@ -27,14 +27,17 @@ public class GetUsersQueryHandler
                 Firstname = x.Firstname,
                 Lastname = x.Lastname,
                 EmailId = x.EmailId,
-                Password = x.PasswordHash,
                 Status = x.Status,
                 CreatedDate = x.CreatedDate,
-                CreatedBy = x.CreatedBy
+                CreatedBy = x.CreatedBy,
 
+                RoleId = x.RoleId,
+                RoleName = x.Role != null ? x.Role.RoleName : null
             })
             .ToList();
     }
 
 }
+
+
 

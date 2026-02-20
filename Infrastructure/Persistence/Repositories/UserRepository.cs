@@ -25,9 +25,11 @@ namespace Infrastructure.Persistence.Repositories
 
         public async Task<List<users>> GetAllAsync()
         {
-            return await _context.Set<users>()
+            return await _context.users
+                .Include(u => u.Role)
                 .ToListAsync();
         }
+
 
         public async Task<users?> GetByIdAsync(long userId)
         {
@@ -37,7 +39,8 @@ namespace Infrastructure.Persistence.Repositories
 
         public async Task<users> GetByUsernameAsync(string username)
         {
-            return await _context.users
+            return await _context.Set<users>()
+                .Include(u => u.Role)
                 .FirstOrDefaultAsync(x => x.Username == username);
         }
 

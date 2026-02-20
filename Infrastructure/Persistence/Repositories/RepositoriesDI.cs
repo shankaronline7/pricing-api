@@ -26,6 +26,8 @@ namespace Pricing.Infrastructure.Persistence
             services.AddTransient<IUnitOfWork, UnitOfWork>();
             services.AddTransient<IJwtTokenService, JwtTokenService>();
             services.AddScoped<IPasswordService, PasswordService>();
+            services.AddScoped<IRoleRepository, RoleRepository>();
+
 
 
 
