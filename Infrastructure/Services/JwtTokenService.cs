@@ -23,14 +23,17 @@ namespace Infrastructure.Services
         }
 
         public (string Token, DateTime Expiry)
-            GenerateToken(int userId, string username)
+         GenerateToken(int userId, string username, int roleId, string roleName)
+
         {
             var jwtSettings = _configuration.GetSection("Jwt");
-
-            var claims = new[]
-            {
+            // ✅ ADD ROLE CLAIMS
+            var claims = new List<Claim>
+        {
             new Claim("UserId", userId.ToString()),
-            new Claim("Username", username)
+            new Claim(ClaimTypes.Name, username),
+            new Claim("RoleId", roleId.ToString()),
+            new Claim(ClaimTypes.Role, roleName)
         };
 
             var key = new SymmetricSecurityKey(
