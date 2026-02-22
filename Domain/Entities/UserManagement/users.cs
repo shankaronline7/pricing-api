@@ -1,11 +1,12 @@
-﻿using Pricing.Domain.Constants;
+﻿using Pricing.Domain.Common;
+using Pricing.Domain.Constants;
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain.Entities.UserManagement
 {
     [Table("users")] // optional but recommended for EF Core
-    public class users
+    public class users : BaseAuditableEntity
     {
         //public static string PasswordHash { get; set; }
 
@@ -29,14 +30,10 @@ namespace Domain.Entities.UserManagement
 
         [Column("status")]
         public UserStatus Status { get; set; }
-
-        [Column("created_date")]
-        public DateTime CreatedDate { get; set; }
-
-        [Column("created_by")]
-        public string? CreatedBy { get; set; }
         public int RoleId { get; set; }
         public Role Role { get; set; }
-
     }
 }
+
+
+ 

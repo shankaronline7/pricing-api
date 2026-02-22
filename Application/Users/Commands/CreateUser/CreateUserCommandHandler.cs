@@ -103,7 +103,7 @@ namespace Application.Users.Commands.CreateUser
                 Lastname = request.Lastname,
                 EmailId = request.EmailId,
                 Status = (UserStatus)request.Status,
-                CreatedDate = DateTime.UtcNow,
+                CreatedOn = DateTime.UtcNow,
                 CreatedBy = request.CreatedBy,
                 RoleId = request.RoleId   
             };

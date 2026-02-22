@@ -1,8 +1,9 @@
-﻿using Pricing.Domain.Constants;
+﻿using Pricing.Domain.Common;
+using Pricing.Domain.Constants;
 
 namespace Application.DTOs.UserManagement
 {
-    public class UserListDto
+    public class UserListDto: BaseAuditableEntity
     {
         public long Id { get; set; }
         public string Username { get; set; } = null!;
@@ -13,7 +14,7 @@ namespace Application.DTOs.UserManagement
         public UserStatus Status { get; set; }
 
         public DateTime CreatedDate { get; set; }
-        public string CreatedBy { get; set; } = null!;
+       // public string CreatedBy { get; set; } = null!;
         public int RoleId { get; set; }
         public string RoleName { get; set; }
     }

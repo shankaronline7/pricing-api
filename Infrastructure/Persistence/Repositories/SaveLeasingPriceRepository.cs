@@ -97,8 +97,8 @@ namespace DSP.Pricing.Infrastructure.Persistence.Repositories
         {
             existingLPC.LPC_ValidFrom = leasingPrice.ValidFrom;
             existingLPC.ApprovalStatus = leasingPrice.Status;
-            existingLPC.LastModifiedBy = leasingPrice.LastchangedFrom;
-            existingLPC.LastModifiedOn = DateTime.UtcNow;
+            existingLPC.UpdatedBy = leasingPrice.LastchangedFrom;
+            existingLPC.UpdatedOn = DateTime.UtcNow;
             existingLPC.CalculationTypeValue = leasingPrice.CalculationTarget;
         }
         private LeasingPricingConditions CreateLeasingPricingConditions(SaveLeasingPriceDto leasingPrice)
@@ -110,8 +110,8 @@ namespace DSP.Pricing.Infrastructure.Persistence.Repositories
                 ApprovalStatus = leasingPrice.Status,
                 CreatedBy = leasingPrice.CreateFrom,
                 CreatedOn = DateTime.UtcNow,
-                LastModifiedBy = leasingPrice.LastchangedFrom,
-                LastModifiedOn = DateTime.UtcNow,
+                UpdatedBy = leasingPrice.LastchangedFrom,
+                UpdatedOn = DateTime.UtcNow,
                 CalculationTypeValue = leasingPrice.CalculationTarget
             };
         }
@@ -152,8 +152,8 @@ namespace DSP.Pricing.Infrastructure.Persistence.Repositories
                     LeasingFactor = leasingFactors[i].LEASINGFACTOR,
                     CreatedBy = lcr?.CreatedBy ?? leasingPrice.CreateFrom,
                     CreatedOn = lcr?.CreatedOn ?? DateTime.UtcNow,
-                    LastModifiedBy = leasingPrice.LastchangedFrom,
-                    LastModifiedOn = DateTime.UtcNow,
+                    UpdatedBy = leasingPrice.LastchangedFrom,
+                    UpdatedOn = DateTime.UtcNow,
                     ErrorMessage = leasingPrice.ErrorMessage
                 });
             }

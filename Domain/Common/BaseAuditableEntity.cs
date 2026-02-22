@@ -1,10 +1,20 @@
-﻿namespace Pricing.Domain.Common
+﻿using Domain.Common;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Pricing.Domain.Common
 {
-    public abstract class BaseAuditableEntity : BaseEntity
+    public abstract class BaseAuditableEntity :IBaseAuditableEntity
     {
-        public DateTime? CreatedOn { get; set; }
-        public string? CreatedBy { get; set; }
-        public DateTime? LastModifiedOn { get; set; }
-        public string? LastModifiedBy { get; set; }
+        [Column("created_date")]
+        public virtual DateTime? CreatedOn { get; set; }
+
+        [Column("created_by")]
+        public virtual string? CreatedBy { get; set; }
+
+        [Column("updated_date")]
+        public virtual DateTime? UpdatedOn { get; set; }
+
+        [Column("updated_by")]
+        public virtual string? UpdatedBy { get; set; }
     }
 }

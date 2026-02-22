@@ -1,4 +1,6 @@
-﻿using Domain.Entities.UserManagement;
+﻿using Application.Interfaces;
+using Domain.Common;
+using Domain.Entities.UserManagement;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
@@ -13,15 +15,18 @@ namespace Pricing.Infrastructure.Persistence;
 public class ApplicationDbContext : DbContext, IDisposable
 {
     private readonly IMediator _mediator;
- 
+    private readonly ICurrentUserService _currentUserService;
+
 
     public ApplicationDbContext(
         DbContextOptions options,
+        ICurrentUserService currentUserService,
         IMediator mediator
        ) : base(options)
     {
         _mediator = mediator;
-     
+        _currentUserService = currentUserService;
+
     }
 
     public DbSet<Role> Roles { get; set; }
@@ -54,7 +59,8 @@ public class ApplicationDbContext : DbContext, IDisposable
     public DbSet<TermMileageSpread> TermMileageSpreads { get; set; }
 
 
-    // public DbSet<AuditableEntitySaveChangesInterceptor> AuditableEntitySaveChangesInterceptors { get;set; }
+     //public DbSet<AuditableEntitySaveChangesInterceptor> AuditableEntitySaveChangesInterceptors { get;set;
+     //
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.HasPostgresEnum<UserStatus>("user_status");
@@ -387,15 +393,9 @@ public class ApplicationDbContext : DbContext, IDisposable
 
         try
         {
-
-            // Optional: you can temporarily remove the transaction to test DB speed
-            await using var transaction = await Database.BeginTransactionAsync(System.Data.IsolationLevel.ReadCommitted, cancellationToken);
-
-          
+            ApplyAuditing();
 
             var result = await base.SaveChangesAsync(cancellationToken);
-
-            await transaction.CommitAsync(cancellationToken);
 
             stopwatch.Stop();
             Console.WriteLine($"✅ SaveChangesAsync completed in {stopwatch.ElapsedMilliseconds} ms");
@@ -409,6 +409,39 @@ public class ApplicationDbContext : DbContext, IDisposable
             throw;
         }
     }
+
+    private void ApplyAuditing()
+    {
+        var entries = ChangeTracker
+            .Entries<IBaseAuditableEntity>();
+
+        foreach (var entry in entries)
+        {
+            var currentUser = _currentUserService?.UserId ?? "System";
+            var utcNow = DateTime.UtcNow;
+
+            if (entry.State == EntityState.Added)
+            {
+                entry.Entity.CreatedOn = utcNow;
+                entry.Entity.CreatedBy = currentUser;
+
+                entry.Entity.UpdatedOn = utcNow;
+                entry.Entity.UpdatedBy = currentUser;
+            }
+
+            if (entry.State == EntityState.Modified)
+            {
+                entry.Entity.UpdatedOn = utcNow;
+                entry.Entity.UpdatedBy = currentUser;
+
+                // Protect created fields
+                entry.Property(x => x.CreatedOn).IsModified = false;
+                entry.Property(x => x.CreatedBy).IsModified = false;
+            }
+        }
+    }
+    
+    
 
 
 

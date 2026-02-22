@@ -1,6 +1,8 @@
-﻿namespace Application.DTOs
+﻿using Pricing.Domain.Common;
+
+namespace Application.DTOs
 {
-    public class LeasingCalculationRequestDto
+    public class LeasingCalculationRequestDto: BaseAuditableEntity
     {
         public long Id { get; set; }
         public string Brand { get; set; } = string.Empty;
