@@ -21,12 +21,14 @@ namespace Pricing.Infrastructure.Persistence
             services.AddTransient<IMileageRepository, MileageRepository>();
             services.AddTransient<IModelBaseDataRepository, ModelBaseDataRepository>();
             services.AddTransient<IProductionCostRepository, ProductionCostRepository>();
-            services.AddTransient<IUserRepository, UserRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
 
-            services.AddTransient<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddTransient<IJwtTokenService, JwtTokenService>();
             services.AddScoped<IPasswordService, PasswordService>();
             services.AddScoped<IRoleRepository, RoleRepository>();
+            services.AddHttpContextAccessor();
+            services.AddScoped<ICurrentUserService, CurrentUserService>();
 
 
 

@@ -1,6 +1,8 @@
-﻿namespace Pricing.Domain.Entities.FunctionalEntities
+﻿using Pricing.Domain.Common;
+
+namespace Pricing.Domain.Entities.FunctionalEntities
 {
-    public class BasicPriceLeasing
+    public class BasicPriceLeasing: BaseAuditableEntity
     {
         public long LPC_ID { get; set; }
         public long ModelBaseDataId { get; set; }

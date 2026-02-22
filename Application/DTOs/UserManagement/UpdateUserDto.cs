@@ -1,6 +1,8 @@
-﻿namespace Application.DTOs.UserManagement
+﻿using Pricing.Domain.Common;
+
+namespace Application.DTOs.UserManagement
 {
-    public class UpdateUserDto
+    public class UpdateUserDto: BaseAuditableEntity
     {
         public string? Username { get; set; }
         public string? Firstname { get; set; }
@@ -8,7 +10,7 @@
         public string? EmailId { get; set; }
         public string? Password { get; set; }
         public int? Status { get; set; }   // Nullable
-        public string? CreatedBy { get; set; }
+        //public string? CreatedBy { get; set; }
     }
 
 }
