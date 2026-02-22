@@ -1,7 +1,9 @@
 ﻿
+using Pricing.Domain.Common;
+
 namespace Application.DTOs
 {
-    public class LeasingCalculationResultDto
+    public class LeasingCalculationResultDto: BaseAuditableEntity
     {
         // Header fields
         public long Id { get; set; }

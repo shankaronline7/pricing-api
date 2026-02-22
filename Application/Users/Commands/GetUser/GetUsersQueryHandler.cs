@@ -28,7 +28,7 @@ public class GetUsersQueryHandler
                 Lastname = x.Lastname,
                 EmailId = x.EmailId,
                 Status = x.Status,
-                CreatedDate = x.CreatedDate,
+                CreatedOn = x.CreatedOn,
                 CreatedBy = x.CreatedBy,
 
                 RoleId = x.RoleId,
