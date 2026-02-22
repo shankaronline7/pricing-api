@@ -37,7 +37,7 @@ namespace Infrastructure.Persistence.Repositories
                 .FirstOrDefaultAsync(x => x.Id == userId);
         }
 
-        public async Task<users> GetByUsernameAsync(string username)
+        public async Task<users?> GetByUsernameAsync(string username)
         {
             return await _context.Set<users>()
                 .Include(u => u.Role)

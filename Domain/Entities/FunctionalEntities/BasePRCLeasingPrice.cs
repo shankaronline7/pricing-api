@@ -1,6 +1,8 @@
-﻿namespace Pricing.Domain.Entities.FunctionalEntities
+﻿using Pricing.Domain.Common;
+
+namespace Pricing.Domain.Entities.FunctionalEntities
 {
-    public class BasePRCLeasingPrice
+    public class BasePRCLeasingPrice: BaseAuditableEntity
     {
 
         public int Id { get; set; }

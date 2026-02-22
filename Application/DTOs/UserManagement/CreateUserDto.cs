@@ -1,8 +1,9 @@
-﻿using Pricing.Domain.Constants;
+﻿using Pricing.Domain.Common;
+using Pricing.Domain.Constants;
 
 namespace Application.DTOs.UserManagement
 {
-    public class CreateUserDto
+    public class CreateUserDto: BaseAuditableEntity
     {
         
             public string Username { get; set; } = null!;
