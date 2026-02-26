@@ -1,4 +1,5 @@
 ﻿using Application.BasePriceLeasing.Command.SavePriceLeasing;
+using Application.BasePriceLeasing.Queries.BasePrice;
 using Application.DTOs;
 using DSP.Pricing.Application.BasePriceLeasing.Command.SavePriceLeasing;
 using DSP.Pricing.Application.BasePriceLeasing.Queries.EditLeasing;
@@ -30,6 +31,21 @@ namespace WebApi.Controllers
             return result == null ?
                 NotFound() :
                 Ok(result);
+        }
+
+        [Authorize(Roles = "Administrator,Sales Manager,Editor,Viewer")]
+        [HttpGet("GetBasePriceLeasingPaged")]
+        public async Task<ActionResult<List<BasePriceLeasingPagedDto>>>
+    GetBasePriceLeasingPaged(int pageNumber, int pageSize)
+        {
+            var result = await Mediator.Send(
+                new GetBasePriceLeasingPagedQuery
+                {
+                    PageNumber = pageNumber,
+                    PageSize = pageSize
+                });
+
+            return result == null ? NotFound() : Ok(result);
         }
         [Authorize(Roles = "Administrator,Sales Manager,Editor")]
 
