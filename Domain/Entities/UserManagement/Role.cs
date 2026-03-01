@@ -11,6 +11,7 @@ namespace Domain.Entities.UserManagement
     {
         public int RoleId { get; set; }
         public string RoleName { get; set; }
+        public ICollection<RolePermission> RolePermissions { get; set; }
     }
 }
 

@@ -84,6 +84,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 Encoding.UTF8.GetBytes(jwtSettings["Key"]))
         };
 
+        
         options.Events = new JwtBearerEvents
         {
             OnAuthenticationFailed = context =>
@@ -94,9 +95,25 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
+/*BUILDER.SERVICES.ADDAUTHORIZATION(OPTIONS =>
+{
+    OPTIONS.ADDPOLICY("USER_CREATE",
+        POLICY => POLICY.REQUIREMENTS.ADD(
+            NEW PERMISSIONREQUIREMENT("USER_CREATE")));
 
+    OPTIONS.ADDPOLICY("USER_UPDATE",
+        POLICY => POLICY.REQUIREMENTS.ADD(
+            NEW PERMISSIONREQUIREMENT("USER_UPDATE")));
 
-builder.Services.AddAuthorization();
+    OPTIONS.ADDPOLICY("USER_DELETE",
+        POLICY => POLICY.REQUIREMENTS.ADD(
+            NEW PERMISSIONREQUIREMENT("USER_DELETE")));
+
+    OPTIONS.ADDPOLICY("USER_VIEW",
+        POLICY => POLICY.REQUIREMENTS.ADD(
+            NEW PERMISSIONREQUIREMENT("USER_VIEW")));
+});*/
+
 
 #endregion
 
