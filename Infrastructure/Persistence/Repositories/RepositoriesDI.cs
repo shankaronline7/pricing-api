@@ -15,25 +15,29 @@ namespace Pricing.Infrastructure.Persistence
     {
         public static void RepositoriesDependencyInjections(IServiceCollection services)
         {
-            services.AddTransient<IBasePriceLeasingRepository, BasePriceLeasingRepository>();
-            services.AddTransient<IBaseEditPriceLeasingRepository, BasePriceEditLeasingRepository>();
-            services.AddTransient<ILeasingCalculationRepository, LeasingCalculationRepository>();
-            services.AddTransient<IMileageRepository, MileageRepository>();
-            services.AddTransient<IModelBaseDataRepository, ModelBaseDataRepository>();
-            services.AddTransient<IProductionCostRepository, ProductionCostRepository>();
+            // Repositories
+            services.AddScoped<IBasePriceLeasingRepository, BasePriceLeasingRepository>();
+            services.AddScoped<IBaseEditPriceLeasingRepository, BasePriceEditLeasingRepository>();
+            services.AddScoped<ILeasingCalculationRepository, LeasingCalculationRepository>();
+            services.AddScoped<IMileageRepository, MileageRepository>();
+            services.AddScoped<IModelBaseDataRepository, ModelBaseDataRepository>();
+            services.AddScoped<IProductionCostRepository, ProductionCostRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
-
-            services.AddScoped<IUnitOfWork, UnitOfWork>();
-            services.AddTransient<IJwtTokenService, JwtTokenService>();
-            services.AddScoped<IPasswordService, PasswordService>();
             services.AddScoped<IRoleRepository, RoleRepository>();
-            services.AddHttpContextAccessor();
+
+            // Unit of Work
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+            // Services
+            services.AddScoped<IJwtTokenService, JwtTokenService>();
+            services.AddScoped<IPasswordService, PasswordService>();
             services.AddScoped<ICurrentUserService, CurrentUserService>();
-
-
-
-
-
+            services.AddScoped<IAuthorizationRepository, AuthorizationRepository>();
+            services.AddScoped<IAuthorizationService, AuthorizationService>();
+            services.AddHttpContextAccessor();
+            services.AddMemoryCache();
         }
+
     }
 }
+

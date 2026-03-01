@@ -35,6 +35,19 @@ namespace Infrastructure.Services
             new Claim("RoleId", roleId.ToString()),
             new Claim(ClaimTypes.Role, roleName)
         };
+            // 🔥 ADD PERMISSION CLAIMS BASED ON ROLE
+            if (roleName == "Administrator")
+            {
+                claims.Add(new Claim("Permission", "USER_CREATE"));
+                claims.Add(new Claim("Permission", "USER_UPDATE"));
+                claims.Add(new Claim("Permission", "USER_DELETE"));
+                claims.Add(new Claim("Permission", "USER_VIEW"));
+            }
+            else if (roleName == "Sales Manager")
+            {
+                claims.Add(new Claim("Permission", "USER_VIEW"));
+            }
+
 
             var key = new SymmetricSecurityKey(
                 Encoding.UTF8.GetBytes(jwtSettings["Key"]));

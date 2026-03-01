@@ -1,5 +1,6 @@
 ﻿using Application.Interfaces;
 using Domain.Common;
+using Domain.Entities;
 using Domain.Entities.UserManagement;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -28,6 +29,8 @@ public class ApplicationDbContext : DbContext, IDisposable
         _currentUserService = currentUserService;
 
     }
+    public DbSet<ApiPermission> ApiPermissions { get; set; }
+    public DbSet<RolePermission> RolePermissions { get; set; }
 
     public DbSet<Role> Roles { get; set; }
     public DbSet<users> users { get; set; }
@@ -78,6 +81,50 @@ public class ApplicationDbContext : DbContext, IDisposable
             entity.Property(r => r.RoleName)
                   .HasColumnName("role_name")
                   .IsRequired();
+        });
+        // API PERMISSIONS TABLE
+        modelBuilder.Entity<ApiPermission>(entity =>
+        {
+            entity.ToTable("api_permissions");
+
+            entity.HasKey(p => p.PermissionId);
+
+            entity.Property(p => p.PermissionId)
+                  .HasColumnName("permission_id");
+
+            entity.Property(p => p.PermissionCode)
+                  .HasColumnName("permission_code")
+                  .IsRequired();
+
+            entity.Property(p => p.ApiRoute)
+                  .HasColumnName("api_route")
+                  .IsRequired();
+
+            entity.Property(p => p.HttpMethod)
+                  .HasColumnName("http_method")
+                  .IsRequired();
+        });
+
+        // ROLE PERMISSIONS TABLE (Composite Key)
+        modelBuilder.Entity<RolePermission>(entity =>
+        {
+            entity.ToTable("role_permissions");
+
+            entity.HasKey(rp => new { rp.RoleId, rp.PermissionId });
+
+            entity.Property(rp => rp.RoleId)
+                  .HasColumnName("role_id");
+
+            entity.Property(rp => rp.PermissionId)
+                  .HasColumnName("permission_id");
+
+            entity.HasOne(rp => rp.Role)
+                  .WithMany(r => r.RolePermissions)
+                  .HasForeignKey(rp => rp.RoleId);
+
+            entity.HasOne(rp => rp.Permission)
+                  .WithMany(p => p.RolePermissions)
+                  .HasForeignKey(rp => rp.PermissionId);
         });
 
 
