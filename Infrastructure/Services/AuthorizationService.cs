@@ -47,7 +47,9 @@ namespace Infrastructure.Services
                 });
             }
 
-            return permissions!.Contains(permissionCode);
+            return permissions != null &&
+                   permissions.Any(p =>
+                       p.Equals(permissionCode, StringComparison.OrdinalIgnoreCase));
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
@@ -6,27 +7,27 @@ namespace WebApi.Controllers.Filters
 {
     public class PermissionAttribute : Attribute, IAsyncAuthorizationFilter
     {
-        private readonly string _permissionCode;
-
-        public PermissionAttribute(string permissionCode)
-        {
-            _permissionCode = permissionCode;
-        }
-
         public async Task OnAuthorizationAsync(AuthorizationFilterContext context)
         {
+            // ✅ STEP 1: Skip if AllowAnonymous exists
+            if (context.ActionDescriptor.EndpointMetadata
+                .OfType<IAllowAnonymous>()
+                .Any())
+            {
+                return;
+            }
+
             var user = context.HttpContext.User;
 
-            // 1️⃣ Check if user authenticated
+            // ✅ STEP 2: Check Authentication
             if (!user.Identity?.IsAuthenticated ?? true)
             {
                 context.Result = new UnauthorizedResult();
                 return;
             }
 
-            // 2️⃣ Extract RoleId from JWT
+            // ✅ STEP 3: Get RoleId
             var roleClaim = user.FindFirst("RoleId");
-
             if (roleClaim == null)
             {
                 context.Result = new ForbidResult();
@@ -35,18 +36,23 @@ namespace WebApi.Controllers.Filters
 
             int roleId = int.Parse(roleClaim.Value);
 
-            // 3️⃣ Get AuthorizationService from DI
+            // ✅ STEP 4: Generate Permission Code
+            var controller = context.RouteData.Values["controller"]?.ToString() ?? "";
+            var action = context.RouteData.Values["action"]?.ToString() ?? "";
+
+            string permissionCode = $"{controller}_{action}".ToUpper();
+
+            // ✅ STEP 5: Check DB Permission
             var authService = context.HttpContext.RequestServices
-                .GetRequiredService<IAuthorizationService>();
+                .GetRequiredService<Application.Interfaces.IAuthorizationService>();
 
             bool hasPermission = await authService
-                .HasPermissionAsync(roleId, _permissionCode);
+                .HasPermissionAsync(roleId, permissionCode);
 
             if (!hasPermission)
             {
-                context.Result = new ForbidResult();
+                context.Result = new OkObjectResult("Permission Failed");
             }
         }
     }
 }
-
