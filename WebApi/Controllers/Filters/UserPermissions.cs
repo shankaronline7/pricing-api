@@ -1,4 +1,4 @@
-﻿using Domain.Constants;
+﻿/*using Domain.Constants;
 
 namespace WebApi.Controllers.Filters
 {
@@ -33,4 +33,4 @@ namespace WebApi.Controllers.Filters
         {
         }
     }
-}
+*/
