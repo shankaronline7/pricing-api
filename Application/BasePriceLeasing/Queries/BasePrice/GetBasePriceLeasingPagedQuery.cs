@@ -37,7 +37,8 @@ namespace Application.BasePriceLeasing.Queries.BasePrice
             };
 
             string functionName =
-                "SELECT * FROM fn_get_modelbaseprice_paginated(@p_page_number, @p_page_size)";
+    "SELECT * FROM fn_get_modelbaseprice_paginated(@p_page_number, @p_page_size)";
+
             var result =
                 await _unitOfWork.ExecFunctionWithParmsAsync<BasePriceLeasingPagedDto>(
                     functionName,

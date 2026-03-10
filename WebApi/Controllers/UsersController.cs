@@ -16,6 +16,7 @@ namespace WebApi.Controllers
     [ApiController]
     public class UsersController : ApiControllerBase
     {
+        
         [Authorize(Roles = "Administrator")]
         [HttpPost("Create")]
         public async Task<IActionResult> Create(CreateUserCommand command)
