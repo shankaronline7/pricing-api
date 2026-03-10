@@ -16,15 +16,17 @@ namespace WebApi.Controllers
     {
         /// <summary>
         /// Get List of Base Price Leasing Records
-        /// </summary> 
+        /// </summary>
         /// <remarks>
-        ///  Get list of  Base Price Leasing records with Active,New In work, In Approval, Approved,Declined status and  this api call not required any input 
+        /// Get list of Base Price Leasing records with Active, New In Work,
+        /// In Approval, Approved, Declined status.
+        /// This API does not require input.
         /// </remarks>
-        /// <returns> This endpoint returns a list of Active Base Price Leasing Detail</returns>
-        /// <response code="200">This endpoint returns List of Base Price Leasing Records</response>
-        [Authorize(Roles = "Administrator,Sales Manager,Editor,Viewer")]
+        /// <returns>Returns list of Active Base Price Leasing details</returns>
+        /// <response code="200">Returns list of Base Price Leasing records</response>
 
-        [HttpGet]
+        [Authorize(Roles = "Administrator,Sales Manager,Editor,Viewer")]
+        [HttpGet("GetBasePriceLeasing")]
         public async Task<ActionResult<List<BasePriceLeasingDto>>> GetBasePriceLeaseing()
         {
             var result = await Mediator.Send(new GetBasePriceLeasingQuery());

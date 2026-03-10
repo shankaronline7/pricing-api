@@ -6,7 +6,7 @@ namespace Pricing.Domain.Entities
     {
         public long Id { get; set; }
 
-        public int? TermValue { get; set; }   // 12, 24, 36
+        public int? TermValue { get; set; }  
         public string? Description { get; set; }
         public bool? Default { get; set; }
 
