@@ -51,7 +51,7 @@ namespace WebApi.Controllers.Filters
 
             if (!hasPermission)
             {
-                context.Result = new OkObjectResult("Permission Failed");
+                context.Result = new ForbidResult();
             }
         }
     }
