@@ -7,7 +7,7 @@ namespace Application.DTOs
         public string BrandName { get; set; }
 
 
-    public string Series { get; set; }
+        public string Series { get; set; }
 
         public string ModelRange { get; set; }
 
@@ -22,10 +22,10 @@ namespace Application.DTOs
         public string Status { get; set; }
 
         public string ApprovalStatus { get; set; }
-
-        public double? LeasingRates { get; set; }
-
-        public double? LeasingFactor { get; set; }
+        public string Discounts { get; set; }
+        public string Margins { get; set; }
+        public string LeasingRates { get; set; }
+        public string LeasingFactor { get; set; }
     }
 
 }
