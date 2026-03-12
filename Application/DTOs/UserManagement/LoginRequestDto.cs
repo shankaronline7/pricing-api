@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Application.DTOs.UserManagement
 {
-    public class LoginRequestDto: BaseAuditableEntity
+    public class LoginRequestDto
     {
         public string Username { get; set; }
         public string Password { get; set; }
