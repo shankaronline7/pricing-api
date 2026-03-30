@@ -4,7 +4,7 @@ namespace Pricing.Domain.Entities
 {
     public class Term : BaseAuditableEntity
     {
-        public long Id { get; set; }
+        public long ID { get; set; }
 
         public int? TermValue { get; set; }  
         public string? Description { get; set; }

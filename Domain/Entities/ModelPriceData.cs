@@ -2,7 +2,7 @@
 
 namespace Pricing.Domain.Entities
 {
-    public class ModelPriceData : BaseAuditableEntity
+    public class ModelPriceData
     {
         public long ID { get; set; }
         public long ModelBaseDataID { get; set; }

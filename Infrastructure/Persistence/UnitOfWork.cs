@@ -30,10 +30,9 @@ namespace Pricing.Infrastructure.Persistence
         private IProductionCostRepository _productionCostRepository;
         private IUserRepository? _userRepository;
         private readonly IJwtTokenService _jwtTokenService;
-
-
-
         private ISaveLeasingPriceRepository _saveLeasingPriceRepository;
+        private ISavePricingRepository _savePricingRepository;
+        private ILeasingAuditRepository _leasingAuditRepository;
         public UnitOfWork(
             ApplicationDbContext context,
             IConfiguration configuration,
@@ -53,6 +52,8 @@ namespace Pricing.Infrastructure.Persistence
         public IBasePriceLeasingRepository BasePriceLeasing => _basePriceLeasingRepository ?? (_basePriceLeasingRepository = new BasePriceLeasingRepository(_context));
         public ILeasingCalculationRepository LeasingCalculation => _leasingCalculationRepository?? (_leasingCalculationRepository = new LeasingCalculationRepository(_context));
         public ISaveLeasingPriceRepository saveLeasingPriceRepository => _saveLeasingPriceRepository ?? (_saveLeasingPriceRepository = new SaveLeasingPriceRepository(_context));
+        public ISavePricingRepository savePricingRepository => _savePricingRepository ??(_savePricingRepository= new SavePricingRepository(_context));
+        public ILeasingAuditRepository LeasingAudit=> _leasingAuditRepository ?? (_leasingAuditRepository = new LeasingAuditRepository(_context));
 
 
         public IUserRepository User
@@ -62,6 +63,7 @@ namespace Pricing.Infrastructure.Persistence
         public IJwtTokenService JwtTokenService
             => _jwtTokenService;
 
+        public ILeasingAuditRepository LeasingAuditi => throw new NotImplementedException();
 
         public async Task<IList<T>> ExecWithStoreProcedureAsyncWithParam<T>(string query, params object[] parameters)
         {

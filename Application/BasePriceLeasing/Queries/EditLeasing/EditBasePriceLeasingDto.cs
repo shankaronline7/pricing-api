@@ -30,7 +30,7 @@ public class EditBasePriceLeasingDto
         public Mapping()
         {
             CreateMap<BasicPriceLeasing, EditBasePriceLeasingDto>()
-                 .ForMember(dest => dest.ID, opt => opt.MapFrom(src => src.LPC_ID))
+                .ForMember(dest => dest.ID, opt => opt.MapFrom(src => src.LPC_ID))
                 .ForMember(dest => dest.Brand, opt => opt.MapFrom(src => src.BrandName))
                 .ForMember(dest => dest.ValidFrom, opt => opt.MapFrom(src => src.LPC_ValidFrom))
                 .ForMember(dest => dest.ValidTo, opt => opt.MapFrom(src => src.LPC_ValidTo))

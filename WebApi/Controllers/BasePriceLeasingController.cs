@@ -1,5 +1,6 @@
 ﻿using Application.BasePriceLeasing.Command.SavePriceLeasing;
 using Application.BasePriceLeasing.Queries.BasePrice;
+using Application.BasePriceLeasing.Queries.LeasingPricingConditionsAudit;
 using Application.DTOs;
 using DSP.Pricing.Application.BasePriceLeasing.Command.SavePriceLeasing;
 using DSP.Pricing.Application.BasePriceLeasing.Queries.EditLeasing;
@@ -25,7 +26,6 @@ namespace WebApi.Controllers
         /// <returns>Returns list of Active Base Price Leasing details</returns>
         /// <response code="200">Returns list of Base Price Leasing records</response>
 
-        [Authorize(Roles = "Administrator,Sales Manager,Editor,Viewer")]
         [HttpGet("GetBasePriceLeasing")]
         public async Task<ActionResult<List<BasePriceLeasingDto>>> GetBasePriceLeaseing()
         {
@@ -34,14 +34,22 @@ namespace WebApi.Controllers
                 NotFound() :
                 Ok(result);
         }
-
-        [Authorize(Roles = "Administrator,Sales Manager,Editor,Viewer")]
-        [HttpGet("GetBasePriceLeasingPaged")]
-        public async Task<ActionResult<List<BasePriceLeasingPagedDto>>>
-    GetBasePriceLeasingPaged(int pageNumber, int pageSize)
+        [HttpGet("GetLeasingAuditHistory/{leasingConditionId}")]
+        public async Task<ActionResult<List<LeasingAuditDto>>> GetLeasingAuditHistory(long leasingConditionId)
         {
             var result = await Mediator.Send(
-                new GetBasePriceLeasingPagedQuery
+                new GetLeasingAuditHistoryQuery(leasingConditionId));
+
+            if (result == null || !result.Any())
+                return NotFound();
+
+            return Ok(result);
+        }
+
+        [HttpGet("GetBasePriceLeasingPaged")]
+        public async Task<ActionResult<List<BasePriceLeasingPagedDto>>>GetBasePriceLeasingPaged(int pageNumber, int pageSize)
+        {
+            var result = await Mediator.Send(new GetBasePriceLeasingPagedQuery
                 {
                     PageNumber = pageNumber,
                     PageSize = pageSize
@@ -49,7 +57,6 @@ namespace WebApi.Controllers
 
             return result == null ? NotFound() : Ok(result);
         }
-        [Authorize(Roles = "Administrator,Sales Manager,Editor")]
 
         [HttpPost("SavePriceLeasing")]
         public async Task<ActionResult<int>> SaveLeasingPrice(List<SaveLeasingPriceDto> saveLeasingPriceDto)
@@ -61,7 +68,17 @@ namespace WebApi.Controllers
                  Ok();
         }
         /// <response code="200">This endpoint returns a list of Active/In work/In Approval/Approved/New  Base Price Leasing Detail.</response>
-        [Authorize(Roles = "Administrator,Sales Manager,Editor")]
+        [HttpPost("SavePricing")]
+        public async Task<ActionResult<int>> SavePricing(List<SavePricingDto> savePricingDto)
+        {
+            var result = await Mediator.Send(new SavePricingCommand
+            {
+                Status = Pricing.Domain.Constants.WorkflowStatus.InWork,
+                savePricingDto = savePricingDto
+            });
+
+            return result == 0 ? NotFound() : Ok();
+        }
 
         [HttpPost("EditPriceLeasing")]
         public async Task<ActionResult<List<EditBasePriceLeasingDto>>> GetEditPriceLeaseing([FromBody] long[] ModelBaseDataID)
@@ -74,12 +91,9 @@ namespace WebApi.Controllers
         }
 
         [HttpPost("GetLeasingCalculationWithDiscount")]
-        public async Task<ActionResult<LeasingCalculationResultDto>>
-    GetACalculationLeasingWithDiscount(
-    [FromBody] LeasingCalculationDto request)
+        public async Task<ActionResult<LeasingCalculationResultDto>>GetACalculationLeasingWithDiscount([FromBody] LeasingCalculationDto request)
         {
-            var result = await Mediator.Send(
-                new GetLeasingCalculationWithDiscountQuery
+            var result = await Mediator.Send(new GetLeasingCalculationWithDiscountQuery
                 {
                     Request = request
                 });

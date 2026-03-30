@@ -17,7 +17,6 @@ namespace WebApi.Controllers
     public class UsersController : ApiControllerBase
     {
         
-        [Authorize(Roles = "Administrator")]
         [HttpPost("Create")]
         public async Task<IActionResult> Create(CreateUserCommand command)
         {
@@ -32,7 +31,6 @@ namespace WebApi.Controllers
 
             return result ? Ok() : NotFound();
         }
-        [Authorize(Roles = "Administrator")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Deactivate(long id)
         {
@@ -46,7 +44,6 @@ namespace WebApi.Controllers
 
             return Ok("User deactivated successfully");
         }
-        [Authorize(Roles = "Administrator,Sales Manager")]
 
         [HttpGet]
         public async Task<IActionResult> Get()
