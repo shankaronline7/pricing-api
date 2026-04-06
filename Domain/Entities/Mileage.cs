@@ -2,7 +2,7 @@
 
 namespace Pricing.Domain.Entities
 {
-    public class MileageModel : BaseAuditableEntity
+    public class MileageModel
     {
         public long ID { get; set; }
         public int? MileageValue { get; set; }
