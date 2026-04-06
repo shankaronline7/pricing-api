@@ -13,7 +13,7 @@ namespace DSP.Pricing.Application.BasePriceLeasing.Queries.LeasingCalculation
         /// <summary>
         /// Input class of the query
         /// </summary>
-      
+
         public LeasingCalculationDto Request { get; set; }
 
     }
@@ -31,9 +31,8 @@ namespace DSP.Pricing.Application.BasePriceLeasing.Queries.LeasingCalculation
             _unitOfWork = unitOfWork;
         }
 
-        
-        public async Task<LeasingCalculationResultDto> Handle(GetLeasingCalculationWithDiscountQuery request,
-        CancellationToken cancellationToken)
+
+        public async Task<LeasingCalculationResultDto> Handle(GetLeasingCalculationWithDiscountQuery request,CancellationToken cancellationToken)
         {
             if (request.Request == null)
                 return null;
@@ -49,22 +48,32 @@ namespace DSP.Pricing.Application.BasePriceLeasing.Queries.LeasingCalculation
             var vehicleCost = await _unitOfWork.ProductionCost
                 .FirstOrDefaultAsync(x => x.ModelBaseDataID == vehicleModels.ID);
 
-            if (vehicleCost == null)
-                return null;
+            try
+            {
+                if (vehicleCost == null)
+                    return null;
 
-            var mileageEntities = await _unitOfWork.Mileage.GetAllAsync();
-            var mileages = mileageEntities.Select(x => x.MileageValue).ToArray();
+                var mileageEntities = await _unitOfWork.Mileage.GetAllAsync();
+                var mileages = mileageEntities.Select(x => x.MileageValue).ToArray();
 
-            var calculated = LeasingFormulaCalculator.Calculate(
-                input,
-                mileages,
-                vehicleModels,
-                (double)vehicleCost.ModelBasePrice
-            );
+                var calculated = LeasingFormulaCalculator.Calculate(
+                    input,
+                    mileages,
+                    vehicleModels,
+                    (double)vehicleCost.ModelBasePrice
+                );
 
-            return calculated;
+                return calculated;
+            }
+            catch (Exception ex)
+            {
+                // Print error for debugging
+                Console.WriteLine("Error in Leasing Calculation: " + ex.Message);
+
+                // optional: rethrow exception
+                throw;
+            }
         }
-
     }
 }
 

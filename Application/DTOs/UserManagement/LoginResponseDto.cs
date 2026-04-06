@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Application.DTOs.UserManagement
 {
-    public class LoginResponseDto: BaseAuditableEntity
+    public class LoginResponseDto
     {
         public string Token { get; set; }
         public DateTime Expiry { get; set; }

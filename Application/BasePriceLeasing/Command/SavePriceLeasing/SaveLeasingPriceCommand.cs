@@ -61,18 +61,30 @@ namespace DSP.Pricing.Application.BasePriceLeasing.Command.SavePriceLeasing
         /// <returns>int</returns>
         public async Task<int> Handle(SaveLeasingPriceCommand request, CancellationToken cancellationToken)
         {
+            try
+            {
+                _logger.LogInformation("Handle method request object " +System.Text.Json.JsonSerializer.Serialize(request));
 
-            _logger.LogInformation("Handle method request object " + System.Text.Json.JsonSerializer.Serialize(request));
-            if (request?.saveLeasingPriceDto.Count > 0)
-            {
-                List<SaveLeasingPriceDto> saveLeasingPriceDtos = new List<SaveLeasingPriceDto>();
-                saveLeasingPriceDtos = await _unitOfWork.saveLeasingPriceRepository.SaveLeasingPrice(request.saveLeasingPriceDto, cancellationToken);
-                return 1;
+                if (request?.saveLeasingPriceDto.Count > 0)
+                {
+                    List<SaveLeasingPriceDto> saveLeasingPriceDtos = new List<SaveLeasingPriceDto>();
+
+                    saveLeasingPriceDtos = await _unitOfWork.saveLeasingPriceRepository.SaveLeasingPrice(request.saveLeasingPriceDto, cancellationToken);
+
+                    return 1;
+                }
+                else
+                {
+                    return 0;
+                }
             }
-            else
+            catch (Exception ex)
             {
-                return 0;
+                _logger.LogError(ex, "Error occurred while saving leasing price");
+
+                // optional: rethrow exception
+                throw;
             }
         }
     }
-}
+    }

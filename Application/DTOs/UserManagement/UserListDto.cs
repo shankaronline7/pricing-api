@@ -14,7 +14,6 @@ namespace Application.DTOs.UserManagement
         public UserStatus Status { get; set; }
 
         public DateTime CreatedDate { get; set; }
-       // public string CreatedBy { get; set; } = null!;
         public int RoleId { get; set; }
         public string RoleName { get; set; }
     }

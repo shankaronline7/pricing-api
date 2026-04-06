@@ -10,7 +10,7 @@ using Pricing.Domain.Entities.FunctionalEntities;
 using Pricing.Infrastructure.Persistence;
 using Pricing.Infrastructure.Persistence.Repositories;
 
-namespace DSP.Pricing.Infrastructure.Persistence.Repositories
+namespace Infrastructure.Persistence.Repositories
 {
     public class SaveLeasingPriceRepository : RepositoryBase<BasePriceLeasingDto>, ISaveLeasingPriceRepository
     {
@@ -82,9 +82,9 @@ namespace DSP.Pricing.Infrastructure.Persistence.Repositories
             }
             return saveLeasingPriceDto;
         }
-        private T DeserializeJson<T>(string json) where T : class
+        private T DeserializeJson<T>(string json) where T : class, new()
         {
-            return string.IsNullOrWhiteSpace(json) ? null : JsonConvert.DeserializeObject<T>(json);
+            return string.IsNullOrWhiteSpace(json) ? new T() : JsonConvert.DeserializeObject<T>(json);
         }
         private async Task<LeasingPricingConditions> GetLeasingPricingConditionsAsync(long? id, CancellationToken cancellationToken)
         {
@@ -119,44 +119,59 @@ namespace DSP.Pricing.Infrastructure.Persistence.Repositories
         {
             return _context.Terms
                 .Where(t => t.TermValue == termValue)
-                .Select(t => t.Id)
+                .Select(t => t.ID)
                 .FirstOrDefault();
         }
         private List<LeasingCalculationResults> CreateOrUpdateLeasingCalculationResults(
-             long lpcId, long termId, List<Discount> discounts, List<Margin> margins,
-             List<LeasingRate> leasingRates, List<LeasingFactor> leasingFactors, SaveLeasingPriceDto leasingPrice)
+    long lpcId, long termId, List<Discount> discounts, List<Margin> margins,
+    List<LeasingRate> leasingRates, List<LeasingFactor> leasingFactors, SaveLeasingPriceDto leasingPrice)
         {
             var leasingCalculationResults = new List<LeasingCalculationResults>();
-            for (int i = 0; i < discounts.Count; i++)
+
+            int count = new[]
+            {
+        discounts?.Count ?? 0,
+        margins?.Count ?? 0,
+        leasingRates?.Count ?? 0,
+        leasingFactors?.Count ?? 0
+    }.Min();
+
+            for (int i = 0; i < count; i++)
             {
                 var mileageId = _context.Mileages
                     .Where(m => m.MileageValue == discounts[i].MILEAGE)
                     .Select(m => m.ID)
                     .FirstOrDefault();
+
                 var termMileageID = _context.TermMileages
                     .Where(tm => tm.TermID == termId && tm.MileageID == mileageId)
                     .Select(tm => tm.ID)
                     .FirstOrDefault();
+
                 var lcr = _context.LeasingCalculationResults
                     .Where(l => l.LeasingPricingConditionsID == lpcId && l.TermMileageID == termMileageID)
                     .AsNoTracking()
                     .FirstOrDefault();
-                leasingCalculationResults.Add(new LeasingCalculationResults
+
+                var entity = new LeasingCalculationResults
                 {
                     ID = lcr?.ID ?? 0,
                     LeasingPricingConditionsID = lpcId,
                     TermMileageID = termMileageID,
-                    LeasingDiscount = discounts[i].DISCOUNT,
-                    Margin = margins[i].MARGIN,
-                    LeasingRate = leasingRates[i].LEASINGRATE,
-                    LeasingFactor = leasingFactors[i].LEASINGFACTOR,
+                    LeasingDiscount = discounts[i]?.DISCOUNT ?? 0,
+                    Margin = margins[i]?.MARGIN ?? 0,
+                    LeasingRate = leasingRates[i]?.LEASINGRATE ?? 0,
+                    LeasingFactor = leasingFactors[i]?.LEASINGFACTOR ?? 0,
                     CreatedBy = lcr?.CreatedBy ?? leasingPrice.CreateFrom,
                     CreatedOn = lcr?.CreatedOn ?? DateTime.UtcNow,
                     UpdatedBy = leasingPrice.LastchangedFrom,
                     UpdatedOn = DateTime.UtcNow,
                     ErrorMessage = leasingPrice.ErrorMessage
-                });
+                };
+
+                leasingCalculationResults.Add(entity);
             }
+
             return leasingCalculationResults;
         }
 

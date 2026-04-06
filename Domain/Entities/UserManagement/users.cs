@@ -30,6 +30,8 @@ namespace Domain.Entities.UserManagement
 
         [Column("status")]
         public UserStatus Status { get; set; }
+
+        [Column("role_id")]
         public int RoleId { get; set; }
         public Role Role { get; set; }
     }

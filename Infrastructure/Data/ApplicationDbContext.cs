@@ -1,6 +1,8 @@
-﻿using Application.Interfaces;
+﻿using Application.BasePriceLeasing.Queries.LeasingPricingConditionsAudit;
+using Application.Interfaces;
 using Domain.Common;
 using Domain.Entities;
+using Domain.Entities.FunctionalEntities;
 using Domain.Entities.UserManagement;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -38,6 +40,7 @@ public class ApplicationDbContext : DbContext, IDisposable
     public DbSet<LeasingCalculationResults> LeasingCalculationResults { get; set; }
     public DbSet<LeasingPriceGroupDefination> LeasingPriceGroupDefinitions { get; set; }
     public DbSet<LeasingPricingConditions> LeasingPricingConditions { get; set; }
+    public DbSet<LPC_Audit> LPC_Audit { get; set; }
 
     public DbSet<FuelTypeModel> FuelTypes { get; set; }
  
@@ -196,7 +199,13 @@ public class ApplicationDbContext : DbContext, IDisposable
                   .HasConstraintName("FK_BP#LeasingPricingCalculation.LPC_MD#ModelBaseData.MBD")
                   .OnDelete(DeleteBehavior.NoAction);
         });
+        modelBuilder.Entity<LPC_Audit>(entity =>
+        {
+            entity.ToTable("BP#LeasingPricingConditions.LPC_audit");
 
+            entity.HasKey(e => e.LPC_Audit_ID)
+                  .HasName("BP#LeasingPricingConditions.LPC_audit_pkey");
+        });
 
         modelBuilder.Entity<Brand>(entity =>
         {
@@ -212,9 +221,6 @@ public class ApplicationDbContext : DbContext, IDisposable
             entity.HasKey(e => e.ID)
                   .HasName("MD#FuelType_pkey");
         });
-
-
-       
 
 
         modelBuilder.Entity<MileageModel>(entity =>
@@ -374,7 +380,7 @@ public class ApplicationDbContext : DbContext, IDisposable
         modelBuilder.Entity<Term>(entity =>
         {
             entity.ToTable("MD#Term");
-            entity.HasKey(e => e.Id)
+            entity.HasKey(e => e.ID)
                   .HasName("MD#Term_pkey");
         });
 
