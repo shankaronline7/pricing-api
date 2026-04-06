@@ -1,8 +1,10 @@
 ﻿using Pricing.Domain.Common;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Pricing.Domain.Entities
 {
-    public class ModelBaseData : BaseAuditableEntity
+    [Table("MD#ModelBaseData.MBD", Schema = "public")]
+    public class ModelBaseData:BaseAuditableEntity
     {
         public long ID { get; set; }
         public long? BrandID { get; set; }

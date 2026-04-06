@@ -10,15 +10,16 @@ namespace Pricing.Application.Common.Interfaces
         Task<int> SaveChangesWithTimeoutAsync(int seconds, CancellationToken ct);
         object? GetRepositoryByEntityName(string entityName);
         ISaveLeasingPriceRepository saveLeasingPriceRepository { get; }
+        ISavePricingRepository savePricingRepository { get; }
         ILeasingCalculationRepository LeasingCalculation { get; }
         IMileageRepository Mileage { get; }
         IModelBaseDataRepository ModelBaseData { get; }
         IProductionCostRepository ProductionCost { get; }
         IUserRepository User { get; }
-
+        ILeasingAuditRepository LeasingAudit { get; }
         IJwtTokenService JwtTokenService { get; }
         IBasePriceLeasingRepository BasePriceLeasing { get; }
-        IBaseEditPriceLeasingRepository BaseEditPriceLeasing { get; }
+        IBaseEditPriceLeasingRepository BaseEditPriceLeasing { get; }   
         IUserRepository UserRepository { get; }
         /// <summary>IMasterDataSyncRepository
         /// When you expect a model back (async)

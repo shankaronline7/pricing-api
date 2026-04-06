@@ -34,6 +34,7 @@ namespace Pricing.Infrastructure.Persistence
             services.AddScoped<ICurrentUserService, CurrentUserService>();
             services.AddScoped<IAuthorizationRepository, AuthorizationRepository>();
             services.AddScoped<IAuthorizationService, AuthorizationService>();
+            services.AddScoped<ILeasingAuditRepository, LeasingAuditRepository>();
             services.AddHttpContextAccessor();
             services.AddMemoryCache();
         }

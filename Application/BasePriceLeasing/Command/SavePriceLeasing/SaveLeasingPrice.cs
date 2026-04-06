@@ -1,4 +1,6 @@
-﻿namespace Application.BasePriceLeasing.Command.SavePriceLeasing
+﻿using Pricing.Domain.Common;
+
+namespace Application.BasePriceLeasing.Command.SavePriceLeasing
 {
     /// <summary>
     /// Input class of SaveLeasingPrice
